@@ -47,7 +47,7 @@ class UnitRecord(_UnitRecord):
     is the subclass's tuple, so the fields are set here by name.
     """
 
-    __slots__ = ("start", "classes", "masteries")
+    __slots__ = ("start", "classes", "masteries", "growth_seed")
 
     def __init__(self, **kw):
         for k in _BASE_SLOTS:
@@ -55,6 +55,7 @@ class UnitRecord(_UnitRecord):
         self.start = kw.get("start", -1)
         self.classes = kw.get("classes") or []
         self.masteries = kw.get("masteries") or []
+        self.growth_seed: int | None = kw.get("growth_seed")
 
     @property
     def copies(self) -> int:
@@ -78,6 +79,11 @@ def _record(f: core.SaveFile, u: core.SaveUnit) -> UnitRecord:
     lvl = f.payload[u.level_off]
     raw = f.u16(u.exp_off)
     into = raw - (lvl - 1) * 100
+    growth_seed = None
+    if (0 <= u.start and u.start + 0x16 <= u.end <= len(f.payload)
+            and f.payload[u.start + 4] == 36):
+        # Format 36: random_seed_; the next word is the separate lottery_seed_.
+        growth_seed = f.u32(u.start + 0x12)
     rec = UnitRecord(base=u.start + 10, uid=u.person & 0xFFFFFFFF,
                      pid=meta["pid"], name=meta.get("name") or meta["pid"],
                      stats_off=u.start + 37, level_off=u.start + 59,
@@ -87,7 +93,7 @@ def _record(f: core.SaveFile, u: core.SaveUnit) -> UnitRecord:
                      klass=u.klass, max_hp=f.u16(u.hp_off), hp_width=4,
                      rank_offs=[], skill_off=0, job_hash=u.klass,
                      start=u.start, classes=list(u.classes),
-                     masteries=list(u.masteries))
+                     masteries=list(u.masteries), growth_seed=growth_seed)
     return rec
 
 

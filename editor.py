@@ -1061,6 +1061,12 @@ class App(AdvancedMixin, tk.Tk):
         self.maxhp_lbl = ttk.Label(hpbox, text="—", style="CardH1.TLabel")
         self.maxhp_lbl.pack(anchor="w")
 
+        seedrow = ttk.Frame(tab, style="Card.TFrame")
+        seedrow.pack(fill="x", pady=(12, 0))
+        ttk.Label(seedrow, text="Growth seed", style="CardMuted.TLabel").pack(side="left")
+        self.growth_seed_lbl = ttk.Label(seedrow, text="—", style="CardH3.TLabel")
+        self.growth_seed_lbl.pack(side="left", padx=(10, 0))
+
         ttk.Separator(tab).pack(fill="x", pady=16)
         gh = ttk.Frame(tab, style="Card.TFrame")
         gh.pack(fill="x", pady=(0, 10))
@@ -2151,6 +2157,7 @@ class App(AdvancedMixin, tk.Tk):
             tree.delete(*tree.get_children())
         self.inv_tree.delete(*self.inv_tree.get_children())
         self.class_now.configure(text="—")
+        self.growth_seed_lbl.configure(text="—")
 
     def _current(self):
         if not self.sv or self.uid is None:
@@ -2184,6 +2191,8 @@ class App(AdvancedMixin, tk.Tk):
         self.exp_var.set(str(u.exp))
         self.exp_bar.set(min(u.exp, 100) / 100)
         self.maxhp_lbl.configure(text=str(u.max_hp) if u.max_hp else "—")
+        self.growth_seed_lbl.configure(
+            text="—" if u.growth_seed is None else f"0x{u.growth_seed:08X}")
         top = max(40, max(u.stats))
         for i, v in enumerate(self.stat_vars):
             v.set(str(u.stats[i]))
