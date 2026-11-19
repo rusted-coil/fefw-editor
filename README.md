@@ -105,6 +105,10 @@ numbers are lower than the unit screen; raising one raises the in-game stat by
 the same amount. Max HP is stored separately and always equals a fixed base
 plus the HP gained, so changing HP gained moves max HP with it.
 
+**Growth seed** shows the selected unit's currently stored growth seed as eight
+hexadecimal digits. It is read-only and follows the selected save slot. A dash
+means the value is unavailable or the unit's record format is not yet supported.
+
 ### World map
 
 The save keeps one small record for each of the map's 864 points: 310 places
