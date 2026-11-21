@@ -218,6 +218,7 @@ class AdvancedMixin(MapPageMixin, TutorialPageMixin, BlessingPageMixin, FastTrav
         self.refresh_facilities()
         self.refresh_deeds()
         self.refresh_boons()
+        self.refresh_random()
 
     def refresh_core_pages(self):
         self.refresh_player()
@@ -230,6 +231,7 @@ class AdvancedMixin(MapPageMixin, TutorialPageMixin, BlessingPageMixin, FastTrav
         self.refresh_facilities()
         self.refresh_deeds()
         self.refresh_boons()
+        self.refresh_random()
 
     # -------------------------------------------------------- pick a value
     def _picker(self, title: str, rows, current: int | None = None):

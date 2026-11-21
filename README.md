@@ -31,6 +31,7 @@ library, or a ready-made Windows `.exe`.
 | **Functions** | Facility and feature availability, area access, and city movement restrictions. |
 | **Notable Deeds** | Progress counters and milestone information, with claim states and rewards shown separately. |
 | **Boons** | Set tiers, remove ownership, switch owned Boons On/Off, or set all to maximum. |
+| **Random** | View and copy the selected slot's map RNG state as four hexadecimal words in save order (X, Y, Z, W). |
 | **Flags** | Search and edit named save variables, including recruitment, conversations and unlocks. English names appear beside the original Japanese identifiers. |
 
 Edits support **Undo/Redo** (Ctrl+Z / Ctrl+Y). **Snapshot** / **Restore…** keep

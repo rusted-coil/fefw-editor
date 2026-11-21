@@ -892,6 +892,7 @@ class App(AdvancedMixin, tk.Tk):
         self.facilities_page = ttk.Frame(self.pages, padding=(14, 14, 14, 8))
         self.deeds_page = ttk.Frame(self.pages, padding=(14, 14, 14, 8))
         self.boons_page = ttk.Frame(self.pages, padding=(14, 14, 14, 8))
+        self.random_page = ttk.Frame(self.pages, padding=(14, 14, 14, 8))
         self.pages.add(self.units_page, text="Units")
         self.pages.add(self.convoy_page, text="Convoy")
         self.pages.add(self.gold_page, text="Gold")
@@ -906,6 +907,7 @@ class App(AdvancedMixin, tk.Tk):
         self.pages.add(self.facilities_page, text="Functions")
         self.pages.add(self.deeds_page, text="Notable Deeds")
         self.pages.add(self.boons_page, text="Boons")
+        self.pages.add(self.random_page, text="Random")
         self.pages.add(self.flags_page, text="Flags")
 
         tab_menu = tk.Menu(self, tearoff=False)
@@ -932,9 +934,29 @@ class App(AdvancedMixin, tk.Tk):
         self._build_facilities()
         self._build_deeds()
         self._build_boons()
+        self._build_random()
         self._style_trees()
         self._enable_multi_select_all()
         self._update_dirty()
+
+    def _build_random(self):
+        card = ttk.Frame(self.random_page, style="Card.TFrame", padding=16)
+        card.pack(fill="x")
+        ttk.Label(card, text="Map RNG state", style="CardH3.TLabel").pack(anchor="w")
+        ttk.Label(card, text="State words in save order (X, Y, Z, W)",
+                  style="CardMuted.TLabel").pack(anchor="w", pady=(8, 4))
+        self.map_random_var = tk.StringVar(value="No save slot selected")
+        ttk.Entry(card, textvariable=self.map_random_var, state="readonly",
+                  font=self.f_mono, width=46).pack(anchor="w")
+
+    def refresh_random(self):
+        f = self.core_of()
+        if f is None:
+            self.map_random_var.set("No save slot selected")
+            return
+        state = f.map_random_state()
+        self.map_random_var.set("Unavailable for this slot" if state is None else
+                                " ".join(f"0x{word:08X}" for word in state))
 
     def _enable_multi_select_all(self):
         """Ctrl+A / Shift+drag on every list except the three row-pickers.

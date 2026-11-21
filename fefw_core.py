@@ -131,6 +131,21 @@ class SaveFile:
     def block_names(self) -> list[str]:
         return [b.name for b in self.blocks]
 
+    def map_random_state(self) -> tuple[int, int, int, int] | None:
+        """Read the four xorshift128 words from the active save's Random block."""
+        block = self.block("Random")
+        if block is None or block.end - block.start != 32:
+            return None
+        # The version-0 block wraps a version-0 RandomSeed leaf. Both end
+        # pointers target the same boundary; the words follow the leaf version.
+        start = block.start
+        end_pointer = self.u32(start)
+        if end_pointer >> 24 or self.u32(start + 8) != end_pointer:
+            return None
+        if self.payload[start + 4] != 0 or self.payload[start + 12] != 0:
+            return None
+        return struct.unpack_from("<4I", self.payload, start + 13)
+
     # -- units -----------------------------------------------------------
     def units(self) -> list["SaveUnit"]:
         blk = self.block("UnitPool")
